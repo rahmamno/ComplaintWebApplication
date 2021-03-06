@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
 import '../App.css';
 
-class LoginForm extends Component {
+class RedisterForm extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-        };
         this.send = this.send.bind(this);
         this.renderChild = this.renderChild.bind(this);
     }
@@ -21,14 +19,20 @@ class LoginForm extends Component {
         }
 
         var bodyReq = [
-            { name: this.refs.name.value }, { email: this.refs.email.value }, { password: this.state.phone }
+            { name: this.refs.name.value }, 
+            { email: this.refs.email.value }, 
+            { password: this.refs.password.value}, 
+            { confirmPassword : this.refs.confirmPassword.value}
         ]
-        this.props.loginAdmin(bodyReq); 
+        this.props.registerAdmin(bodyReq);
+
     }
 
     renderChild() {
         return (
             <form ref="form" key="not-sent" className={"login-form"} autoComplete="off">
+                <div className="middle-title">Admin Registration Portal</div>
+                <hr />
                 <div className="content">
                     <div className="section">
                         <label className="label">{"Name"}</label>
@@ -40,14 +44,15 @@ class LoginForm extends Component {
                     </div>
                     <div className="section">
                         <label className="label">{"Password"}</label>
-                        <input ref="email" required autoComplete="new-password" />
+                        <input ref="password" required autoComplete="new-password" type="password"/>
                     </div>
                     <div className="section">
                         <label className="label">{"Confirm Password"}</label>
-                        <input ref="email" required autoComplete="new-password" />
+                        <input ref="confirmPassword" required autoComplete="new-password" type="password"/>
                     </div>
+                    <button className="button-send" onClick={this.send}>Login</button>
+                    <a className="check-location" href="/AdminLogin">Have an Account?</a>
                 </div>
-                <button onClick={this.send}></button>
             </form>
         );
     }
@@ -61,6 +66,6 @@ class LoginForm extends Component {
     }
 }
 
-LoginForm.displayName = 'LoginForm';
+RedisterForm.displayName = 'RedisterForm';
 
-export default LoginForm;
+export default RedisterForm;

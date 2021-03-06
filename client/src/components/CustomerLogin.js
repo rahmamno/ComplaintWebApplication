@@ -21,7 +21,10 @@ class CustomerLogin extends Component {
         }
 
         var bodyReq = [
-            { name: this.refs.name.value }, { email: this.refs.email.value }, { password: this.state.phone }
+            { name: this.refs.name.value }, 
+            { email: this.refs.email.value }, 
+            { password: this.refs.password.value}, 
+            { confirmPassword : this.refs.confirmPassword.value}
         ]
         this.props.loginCustomer(bodyReq);
     }
@@ -29,7 +32,7 @@ class CustomerLogin extends Component {
     renderChild() {
         return (
             <form ref="form" key="not-sent" className={"login-form"} autoComplete="off">
-                <div className="middle-title">Customer Portal</div>
+                <div className="middle-title">Customer Login Portal</div>
                 <hr />
                 <div className="content">
                     <div className="section">
@@ -42,10 +45,10 @@ class CustomerLogin extends Component {
                     </div>
                     <div className="section">
                         <label className="label">{"Password"}</label>
-                        <input ref="email" required autoComplete="new-password" />
+                        <input ref="email" required autoComplete="new-password" type="password"/>
                     </div>
                     <button className="button-send" onClick={this.send}>Login</button>
-                    <a className="check-location" href="/CustomerLogin">Not Registerd?</a>
+                    <a className="check-location" href="/CustomerReqistration">Not Registerd?</a>
                 </div>
             </form>
         );

@@ -9,12 +9,15 @@ import AdminDashboard from './AdminDashboard';
 import CustomerDashboard from './CustomerDashboard';
 import AdminLogin from './AdminLogin';
 import CustomerLogin from './CustomerLogin';
+import AddComplaint from './AddComplaint';
+import UpdateComplaint from './UpdateComplaint';
+import AdminRegistration from './AdminRegistration';
+import CustomerReqistration from './CustomerReqistration';
 import Header from './Header';
 import * as actions from "../actions";
 
 class App extends Component {
   componentDidMount() {
-    console.log('111')
     this.props.fetchUser(); //to verify the user loged in to reducers
   }
 
@@ -40,7 +43,18 @@ class App extends Component {
             <Route path="/CustomerLogin">
               <CustomerLogin />
             </Route>
-
+            <Route path="/api/AddComplaint">
+              <AddComplaint />
+            </Route>
+            <Route path="/api/updateComplaint">
+              <UpdateComplaint />
+            </Route>
+            <Route path="/AdminRegistration">
+              <AdminRegistration />
+            </Route>
+            <Route path="/CustomerReqistration">
+              <CustomerReqistration />
+            </Route>
           </div>
         </BrowserRouter>
         {/* navigation the server */}

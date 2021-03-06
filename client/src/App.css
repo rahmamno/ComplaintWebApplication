@@ -99,10 +99,11 @@ textarea {
   margin-left: 0%;
 }
 
-.check-location{
+.check-location {
   margin-top: 30%;
   margin-left: 13%;
 }
+
 .home-container {
   margin: 25px auto;
   position: relative;
@@ -146,6 +147,9 @@ textarea {
   text-align: center;
   font-family: "Courier New", Courier, monospace;
   font-size: 30px;
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 .welcome {

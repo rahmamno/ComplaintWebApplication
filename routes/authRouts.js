@@ -9,7 +9,7 @@ const Complaints = require('../Modules/Complaints');
 
 module.exports = (app) => {
     //create a route handler
-    app.get('/admin/login', cors(), (req, res, next) => {
+    app.get('/Admin/login', cors(), (req, res, next) => {
         passport.authenticate('local', {
             successRedirect: '/AdminDashboard',
             failureRedirect: '/admin/login',

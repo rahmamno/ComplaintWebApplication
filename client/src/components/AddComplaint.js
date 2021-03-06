@@ -21,7 +21,7 @@ class AddComplaint extends Component {
         var bodyReq = [
             { complaint: this.refs.complaint.value }
         ]
-        this.props.loginAdmin(bodyReq);
+        this.props.AddComplaint(bodyReq);
     }
 
     renderChild() {
@@ -35,7 +35,6 @@ class AddComplaint extends Component {
                         <input ref="complaint"/>
                     </div>
                     <button className="button-send" onClick={this.send}>Submit</button>
-                    {/* <a className="check-location" href="/CustomerLogin">Not Registerd?</a> */}
                 </div>
             </form>
         );

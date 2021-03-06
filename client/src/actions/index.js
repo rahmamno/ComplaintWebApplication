@@ -5,7 +5,8 @@ import {
     CUSTOMER_LOGIN,
     CUSTOMER_REGISTER,
     ADMIN_REGISTER,
-    ADD_COMPLAINT
+    ADD_COMPLAINT,
+    UPDATE_COMPLAINT
 } from './actionTypes';
 
 export const fetchUser = () => 
@@ -58,6 +59,15 @@ export const fetchUser = () =>
         axios.post('/api/Customer/login', reqBody)
             .then(res => dispatch({
                 type: ADD_COMPLAINT,
+                payload: res
+            }))
+    }
+
+    export const updateComplaint = (reqBody) => 
+    async (dispatch) => {
+        axios.post('/api/updateComplaint', reqBody)
+            .then(res => dispatch({
+                type: UPDATE_COMPLAINT,
                 payload: res
             }))
     }

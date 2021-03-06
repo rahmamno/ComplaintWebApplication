@@ -19,15 +19,17 @@ class AdminLogin extends Component {
         }
 
         var bodyReq = [
-            { name: this.refs.name.value }, { email: this.refs.email.value }, { password: this.state.phone }
+            { name: this.refs.name.value }, 
+            { email: this.refs.email.value }, 
+            { password: this.refs.password.value}
         ]
-        this.props.loginAdmin(bodyReq); 
+        this.props.loginAdmin(bodyReq);
     }
 
     renderChild() {
         return (
             <form ref="form" key="not-sent" className={"login-form"} autoComplete="off">
-                <div className="middle-title">Admin Portal</div>
+                <div className="middle-title">Admin Login Portal</div>
                 <hr />
                 <div className="content">
                     <div className="section">
@@ -40,10 +42,10 @@ class AdminLogin extends Component {
                     </div>
                     <div className="section">
                         <label className="label">{"Password"}</label>
-                        <input ref="email" required autoComplete="new-password" />
+                        <input ref="password" required autoComplete="new-password" type="password"/>
                     </div>
                     <button className="button-send" onClick={this.send}>Login</button>
-                <a className="check-location" href="/CustomerLogin">Not Registerd?</a>
+                    <a className="check-location" href="/AdminRegistration">Not Registerd?</a>
                 </div>
             </form>
         );
