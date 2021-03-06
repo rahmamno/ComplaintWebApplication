@@ -1,14 +1,49 @@
 //get the express library
-const express = require('express')
+const express = require('express');
+const mongoose = require('mongoose');
+const credentials= require('./config/credentials');
+const session = require('express-session');
+require('./Modules/Admin');
+require('./Modules/Customer');
+const passport = require('passport');
+require('dotenv').config();
+const flash = require('express-flash');
+const cors = require('cors');
+
 //create express application
 const app = express();
 
-//create a route handler
-app.get('/', (req, res) =>{
-    res.send({hi: 'there'})
-});
+//require('./Services/passport')(passport);
 
-//define the port to listen from Heroku 
+//Database config and connect
+const db = process.env.REACT_APP_MongoDB_URL;
+mongoose.connect(credentials.mongoDB_URL, { useUnifiedTopology: true,useNewUrlParser: true })
+    .then(() => console.log('MongoDB is Connected'))
+    .catch(err => console.log(err));
+
+//Bodyparser 
+app.use(express.json()) // for parsing application/json
+app.use(express.urlencoded({ extended: false }))
+
+// express session 
+app.use(session({
+    secret: 'secret',
+    resave: true,
+    saveUninitialized: true,
+    cookie: { secure: true }
+}));
+
+app.use(cors());
+
+app.use(flash());
+
+//let Passport use cookie auhentication for the users
+app.use(passport.initialize());
+app.use(passport.session());
+
+//routes
+require('./routes/authRouts')(app);
+
+//define the port to listen from Heroku  
 const PORT = process.env.PORT || 5000
-//listen to the app at port 5000
 app.listen(PORT);
