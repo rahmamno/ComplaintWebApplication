@@ -16,8 +16,12 @@ const AdminSchema = new mongoose.Schema({
     },
     date:{
         type: Date,
-        required: true,
+        required: false, //"fix" date will be filled automatically - not requierd  
         value: Date.now
+    },
+    AdminId:{
+        type: String,
+        required: false
     }
 })
 

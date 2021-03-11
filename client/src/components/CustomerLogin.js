@@ -20,12 +20,12 @@ class CustomerLogin extends Component {
             return;
         }
 
-        var bodyReq = [
-            { name: this.refs.name.value }, 
-            { email: this.refs.email.value }, 
-            { password: this.refs.password.value}, 
-            { confirmPassword : this.refs.confirmPassword.value}
-        ]
+        var bodyReq = 
+            {
+                name: this.refs.name.value,
+                email: this.refs.email.value,
+                password: this.refs.password.value
+            }
         this.props.loginCustomer(bodyReq);
     }
 

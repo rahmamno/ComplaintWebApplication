@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import '../App.css';
+import { connect } from 'react-redux'; //"fix" correct component with redux to pass the props
+import * as actions from "../actions"; //"fix" get access to the actions 
 
 class AdminLogin extends Component {
     constructor(props) {
@@ -18,12 +20,19 @@ class AdminLogin extends Component {
             return;
         }
 
-        var bodyReq = [
-            { name: this.refs.name.value }, 
-            { email: this.refs.email.value }, 
-            { password: this.refs.password.value}
-        ]
-        this.props.loginAdmin(bodyReq);
+        // "fix" the request to json object instead of array
+        var bodyReq =   
+        {
+            name: this.refs.name.value,
+            email: this.refs.email.value,
+            password: this.refs.password.value
+        }
+        const respone = this.props.loginAdmin({
+            name: this.refs.name.value,
+            email: this.refs.email.value,
+            password: this.refs.password.value
+        });
+        console.log('respone',respone)
     }
 
     renderChild() {
@@ -42,7 +51,7 @@ class AdminLogin extends Component {
                     </div>
                     <div className="section">
                         <label className="label">{"Password"}</label>
-                        <input ref="password" required autoComplete="new-password" type="password"/>
+                        <input ref="password" required autoComplete="new-password" type="password" />
                     </div>
                     <button className="button-send" onClick={this.send}>Login</button>
                     <a className="check-location" href="/AdminRegistration">Not Registerd?</a>
@@ -62,4 +71,4 @@ class AdminLogin extends Component {
 
 AdminLogin.displayName = 'AdminLogin';
 
-export default AdminLogin;
+export default connect(null, actions)(AdminLogin); //connect to redux

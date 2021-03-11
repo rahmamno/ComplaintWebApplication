@@ -56,7 +56,7 @@ export const fetchUser = () =>
 
     export const addComplaint = (reqBody) => 
     async (dispatch) => {
-        axios.post('/api/Customer/login', reqBody)
+        axios.post('/api/addComplaint/A', reqBody) //fix api name
             .then(res => dispatch({
                 type: ADD_COMPLAINT,
                 payload: res

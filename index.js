@@ -27,22 +27,22 @@ app.use(express.urlencoded({ extended: false }))
 
 // express session 
 app.use(session({
-    secret: 'secret',
+    secret: 'thisisadeepsecret',  //session secret updated
     resave: true,
     saveUninitialized: true,
     cookie: { secure: true }
 }));
 
-app.use(cors());
+app.use(cors()); //remove conflicts from server side and client side
 
-app.use(flash());
+app.use(flash()); // use express-flash for flash messages stored in session
 
 //let Passport use cookie auhentication for the users
 app.use(passport.initialize());
 app.use(passport.session());
 
 //routes
-require('./routes/authRouts')(app);
+require('./routes/authRouts')(app, passport);
 
 //define the port to listen from Heroku  
 const PORT = process.env.PORT || 5000

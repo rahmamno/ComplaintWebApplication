@@ -1,26 +1,34 @@
 const passport = require('passport');
 const bcyrpt = require('bcryptjs');
-const Users = require('../Modules/Admin');
-const Customer = require('../Modules/Customer');
-const { ensureAuthenticated } = require('../Services/auth');
 const Admin = require('../Modules/Admin');
+const Customer = require('../Modules/Customer');
+require('../Services/auth');
 const cors = require('cors');
 const Complaints = require('../Modules/Complaints');
 
 module.exports = (app) => {
     //create a route handler
-    app.get('/Admin/login', cors(), (req, res, next) => {
+
+    function isLoggedIn(req, res, next) {
+        if (req.isAuthenticated()) {
+            return next();
+        }
+        res.redirect('/');
+    }
+
+    app.post('/api/Admin/login', isLoggedIn, (req, res) => {// from get to post to send users info and add a / before api
         passport.authenticate('local', {
             successRedirect: '/AdminDashboard',
-            failureRedirect: '/admin/login',
+            failureRedirect: '/AdminLogin',
             failureFlash: true
-        })(req, res, next);
+        });
+        return res;
     });
 
-    app.get('/Customer/login', cors(), (req, res, next) => {
+    app.post('/api/Customer/login', cors(), (req, res, next) => {
         passport.authenticate('local', {
             successRedirect: '/CustomerDashboard',
-            failureRedirect: '/Customer/login',
+            failureRedirect: '/CustomerLogin',
             failureFlash: true
         })(req, res, next);
     });
@@ -31,7 +39,7 @@ module.exports = (app) => {
         let errors = {};
         //check requierd fields 
         if (!name || !email || !password || !confirmPassword) {
-            //errors.push({ msg: 'Requierd fields are missing!' })
+            errors.push({ msg: 'Requierd fields are missing!' })
             res.send({ msg: 'Requierd fields are missing!' })
         }
 
@@ -53,7 +61,7 @@ module.exports = (app) => {
             //users validation
             const CustomerExist = await Customer.findOne({ email })
             if (CustomerExist) {//if Customer aleady exist
-                //errors.push({ msg: 'Customer is already exist' })
+                errors.push({ msg: 'Customer is already exist' })
                 res.send({ msg: 'Customer is already exist' })
                 res.render({
                     errors,
@@ -78,20 +86,21 @@ module.exports = (app) => {
                         newUser.password = hash;
 
                         const user = await newUser.save()
-                        res.redirect('./login');
+                        res.redirect('/AdminLogin');
                         return user;
                     }))
             }
         }
+        return res;
     });
 
     app.post('/api/Admin/register', cors(), async (req, res) => {
-        const { name, email, password, confirmPassword } = req.body;
+        const { name, email, password, confirmPassword, AdminId } = req.body;
 
         let errors = {};
 
         //check requierd fields 
-        if (!name || !email || !password || !confirmPassword) {
+        if (!name || !email || !password || !confirmPassword || !AdminId) {
             //errors.push({ msg: 'Requierd fields are missing!' })
             res.send({ msg: 'Requierd fields are missing!' })
         }
@@ -108,7 +117,8 @@ module.exports = (app) => {
                 name,
                 email,
                 password,
-                confirmPassword
+                confirmPassword,
+                AdminId
             });
         } else {
             //users validation
@@ -121,14 +131,16 @@ module.exports = (app) => {
                     name,
                     email,
                     password,
-                    confirmPassword
+                    confirmPassword,
+                    AdminId
                 });
             } else {
                 //create instance to save in MongoDB
                 const newUser = new Admin({
                     name,
                     email,
-                    password
+                    password,
+                    AdminId
                 })
 
                 //hash password(encrypted password)
@@ -139,46 +151,57 @@ module.exports = (app) => {
                         newUser.password = hash;
 
                         const user = await newUser.save()
+                        res.send(user);
                         res.redirect('/AdminDashboard');
                         //return done(null, user);
-                        return user;
                     }))
             }
         }
+        return res;
     });
 
-    app.get('/AdminDashboard', cors(), async (req, res) => {
+    app.get('/AdminDashboard/home', cors(), async (req, res) => {
         const Complaints = await Complaints.find()//get all the complaints 
         res.send({ msg: Complaints })
+        return res;
     });
 
     app.get('/CustomerDashboard', cors(), async (req, res) => {
         const { email } = req.body;
 
-        const ustomerComplaints = await Complaints.find({ email })
-        if (ustomerComplaints) {//if customer has complaints retrive it
-            res.send({ ustomerComplaints: ustomerComplaints })
+        const customerComplaints = await Complaints.find({ email })
+        if (customerComplaints) {//if customer has complaints retrive it
+            res.send({ customerComplaints: customerComplaints })
         }
+        return res;
     });
 
     app.get('/api/logout', cors(), (req, res) => {
         req.logout();
         req.redirect('/')
+        return res;
     })
 
     app.get('/api/currentUser', cors(), (req, res) => {
-        res.send({ req });
-        res.send({ hi: 'there' })
+        //res.send({ req });
+        console.log('user', req.user)
+        return true;
     })
 
-    app.post('/api/addCoplaint', cors(), async (req, res) => {
-        const { complaint } = req.body;
+    app.post('/api/addComplaint/A', cors(), async (req, res) => {
+        const { email, complaint } = req.body;
 
         let errors = {};
 
         //check requierd fields 
         if (!complaint) {
             res.send({ msg: 'complaint field is missing!' })
+            res.render({
+                errors,
+                email,
+                complaint
+            });
+            return res;
         }
 
         //add complaint to the database
@@ -190,10 +213,10 @@ module.exports = (app) => {
 
         await newComplaint.save()
         res.redirect('/CustomerDashboard');
-        return true;
+        return res;
     });
 
-    app.post('/api/UpdateCoplaint', cors(), async (req, res) => {
+    app.post('/api/UpdateComplaint', cors(), async (req, res) => { //fix route syntax
         const { email, status } = req.body;
 
         let errors = {};
@@ -201,6 +224,11 @@ module.exports = (app) => {
         //check requierd fields 
         if (!complaint) {
             res.send({ msg: 'complaint field is missing!' })
+            res.render({
+                errors,
+                email,
+                status
+            });
         }
 
         //add complaint to the database
@@ -209,8 +237,8 @@ module.exports = (app) => {
             email
         })
 
-        await newComplaint.updateOne({email, status}) //update when email , 
-        res.redirect('/CustomerDashboard');
+        await newComplaint.updateOne({ email, status }) //update when email , 
+        res.redirect('/AdminDashboard');
         return true;
     });
 }

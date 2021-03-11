@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import '../App.css';
+import { connect } from 'react-redux';
+import * as actions from "../actions";
 
 class AddComplaint extends Component {
     constructor(props) {
         super(props);
-        this.send = this.send.bind(this);
-        this.renderChild = this.renderChild.bind(this);
-    }
-
-    send(event) {
+        this.addComplaint = this.addComplaint.bind(this);
+    }  
+    addComplaint(event) {
         event.preventDefault();
 
         // Use HTML form validation to validate inputs
@@ -18,32 +18,35 @@ class AddComplaint extends Component {
             return;
         }
 
-        var bodyReq = [
-            { complaint: this.refs.complaint.value }
-        ]
-        this.props.AddComplaint(bodyReq);
-    }
-
-    renderChild() {
-        return (
-            <form ref="form" key="not-sent" className={"login-form"} autoComplete="off">
-                <div className="middle-title">Add Complaint</div>
-                <hr />
-                <div className="content">
-                    <div className="section">
-                        <label className="label">{"Ender your Complaint"}</label>
-                        <input ref="complaint"/>
-                    </div>
-                    <button className="button-send" onClick={this.send}>Submit</button>
-                </div>
-            </form>
-        );
-    }
+        var bodyReq = 
+            {
+                complaint: this.refs.complaint.value,
+                email: this.refs.email.value,
+            }
+        
+        
+        const respone = this.props.addComplaint(bodyReq)
+        console.log('respone',respone)
+    } 
 
     render() {
         return (
             <div class="App">
-                {this.renderChild()}
+                <form ref="form" key="not-sent" className={"login-form"} autoComplete="off">
+                <div className="middle-title">Add your Complaint</div>
+                <hr />
+                <div className="content">
+                    <div className="section">
+                        <label className="label">{"Email"}</label>
+                        <input ref="email" required title="Hint: lower case only" autoComplete="new-password" />
+                    </div>
+                    <div className="section">
+                        <label className="label">{"Complaint"}</label>
+                        <textarea ref="complaint" required />
+                    </div>
+                    <button className="button-send" onClick={this.addComplaint}>Submit</button>
+                </div>
+            </form>
             </div>
         );
     }
@@ -51,4 +54,4 @@ class AddComplaint extends Component {
 
 AddComplaint.displayName = 'AddComplaint';
 
-export default AddComplaint;
+export default connect(null, actions)(AddComplaint);

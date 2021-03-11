@@ -31,10 +31,10 @@ class App extends Component {
             <Route exact path="/">
               <HomePage />
             </Route>
-            <Route path="http://localhost:5000/AdminDashboard">
+            <Route path="/AdminDashboard"> {/* "fix" route should be localhost:3000 */}
               <AdminDashboard />
             </Route>
-            <Route path="http://localhost:5000/UserDashboard">
+            <Route path="/UserDashboard">
               <CustomerDashboard />
             </Route>
             <Route path="/AdminLogin">
@@ -43,10 +43,10 @@ class App extends Component {
             <Route path="/CustomerLogin">
               <CustomerLogin />
             </Route>
-            <Route path="/api/AddComplaint">
+            <Route path="/AddComplaint">
               <AddComplaint />
             </Route>
-            <Route path="/api/updateComplaint">
+            <Route path="/updateComplaint">
               <UpdateComplaint />
             </Route>
             <Route path="/AdminRegistration">

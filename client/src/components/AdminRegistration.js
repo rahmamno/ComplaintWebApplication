@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import '../App.css';
+import { connect } from 'react-redux';
+import * as actions from "../actions";
 
 class RedisterForm extends Component {
     constructor(props) {
@@ -18,14 +20,17 @@ class RedisterForm extends Component {
             return;
         }
 
-        var bodyReq = [
-            { name: this.refs.name.value }, 
-            { email: this.refs.email.value }, 
-            { password: this.refs.password.value}, 
-            { confirmPassword : this.refs.confirmPassword.value}
-        ]
-        this.props.registerAdmin(bodyReq);
-
+        var bodyReq = 
+            {
+                name: this.refs.name.value,
+                email: this.refs.email.value,
+                password: this.refs.password.value,
+                confirmPassword: this.refs.confirmPassword.value
+            }
+        
+        
+        const respone = this.props.registerAdmin(bodyReq)
+        console.log('respone',respone)
     }
 
     renderChild() {
@@ -44,13 +49,13 @@ class RedisterForm extends Component {
                     </div>
                     <div className="section">
                         <label className="label">{"Password"}</label>
-                        <input ref="password" required autoComplete="new-password" type="password"/>
+                        <input ref="password" required autoComplete="new-password" type="password" />
                     </div>
                     <div className="section">
                         <label className="label">{"Confirm Password"}</label>
-                        <input ref="confirmPassword" required autoComplete="new-password" type="password"/>
+                        <input ref="confirmPassword" required autoComplete="new-password" type="password" />
                     </div>
-                    <button className="button-send" onClick={this.send}>Login</button>
+                    <button className="button-send" onClick={this.send}>Sign up</button>
                     <a className="check-location" href="/AdminLogin">Have an Account?</a>
                 </div>
             </form>
@@ -68,4 +73,4 @@ class RedisterForm extends Component {
 
 RedisterForm.displayName = 'RedisterForm';
 
-export default RedisterForm;
+export default connect(null, actions)(RedisterForm);
